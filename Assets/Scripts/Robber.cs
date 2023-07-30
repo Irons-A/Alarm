@@ -5,18 +5,13 @@ using UnityEngine;
 public class Robber : MonoBehaviour
 {
     private float _speed = 6;
-    
-    void Start()
-    {
-        
-    }
 
     void Update()
     {
-        MovementMechanic();
+        Move();
     }
 
-    private void MovementMechanic()
+    private void Move()
     {
         if (Input.GetKey(KeyCode.D))
         {

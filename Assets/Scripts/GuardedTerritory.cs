@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
+
 public class GuardedTerritory : MonoBehaviour
 {
     private float _volumeAmplification = 0.5f;
@@ -9,16 +11,12 @@ public class GuardedTerritory : MonoBehaviour
     private int _maxVolume = 1;
     private int _targetValue;
     private AudioSource _sound;
+    private Coroutine _volumeRoutine;
 
     void Start()
     {
         _sound = GetComponent<AudioSource>();
         _sound.volume = 0;
-    }
-
-    void Update()
-    {
-
     }
 
     private IEnumerator ChangeVolume()
@@ -32,24 +30,34 @@ public class GuardedTerritory : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
+            if (_volumeRoutine != null)
+            {
+                StopCoroutine(_volumeRoutine);
+            }
+
             _sound.Play();
             _targetValue = _maxVolume;
-            StartCoroutine(ChangeVolume());
+            _volumeRoutine = StartCoroutine(ChangeVolume());
         }
 
         Debug.Log(collision.gameObject.name);
     }
 
-    void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
+            if (_volumeRoutine != null)
+            {
+                StopCoroutine(_volumeRoutine);
+            }
+
             _targetValue = _minVolume;
-            StartCoroutine(ChangeVolume());
+            _volumeRoutine = StartCoroutine(ChangeVolume());
         }
 
         Debug.Log("left Collision");
