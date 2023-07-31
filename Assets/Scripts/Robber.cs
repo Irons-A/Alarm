@@ -6,7 +6,7 @@ public class Robber : MonoBehaviour
 {
     private float _speed = 6;
 
-    void Update()
+    private void Update()
     {
         Move();
     }
