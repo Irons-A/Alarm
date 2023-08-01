@@ -5,14 +5,14 @@ using UnityEngine.Events;
 
 public class GuardedTerritory : MonoBehaviour
 {
-    [SerializeField] private UnityEvent _triggerAlarm;
-    [SerializeField] private UnityEvent _stopAlarm;
+    public static UnityAction triggerAlarm;
+    public static UnityAction stopAlarm;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            _triggerAlarm?.Invoke();
+            triggerAlarm?.Invoke();
         }
 
         Debug.Log(collision.gameObject.name);
@@ -22,7 +22,7 @@ public class GuardedTerritory : MonoBehaviour
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            _stopAlarm?.Invoke();
+            stopAlarm?.Invoke();
         }
 
         Debug.Log("left Collision");

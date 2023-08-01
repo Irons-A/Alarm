@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 
-public class AlarmManager : MonoBehaviour
+public class Alarm : MonoBehaviour
 {
     private float _volumeAmplification = 0.5f;
     private int _minVolume = 0;
@@ -12,7 +12,12 @@ public class AlarmManager : MonoBehaviour
     private int _targetValue;
     private AudioSource _sound;
     private Coroutine _volumeRoutine;
-    private bool isRobberInside;
+
+    private void OnEnable()
+    {
+        GuardedTerritory.triggerAlarm += TriggerAlarm;
+        GuardedTerritory.stopAlarm += StopAlarm;
+    }
 
     private void Start()
     {
