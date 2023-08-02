@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 
-public class Alarm : MonoBehaviour
+public class AlarmController : MonoBehaviour
 {
     private float _volumeAmplification = 0.5f;
     private int _minVolume = 0;
@@ -12,11 +12,17 @@ public class Alarm : MonoBehaviour
     private int _targetValue;
     private AudioSource _sound;
     private Coroutine _volumeRoutine;
+    private GuardedTerritory _guardedTerritory;
+
+    private void Awake()
+    {
+        _guardedTerritory = FindObjectOfType<GuardedTerritory>();
+    }
 
     private void OnEnable()
     {
-        GuardedTerritory.triggerAlarm += TriggerAlarm;
-        GuardedTerritory.stopAlarm += StopAlarm;
+        _guardedTerritory.TriggerAlarm += TriggerAlarm;
+        _guardedTerritory.StopAlarm += StopAlarm;
     }
 
     private void Start()

@@ -5,26 +5,22 @@ using UnityEngine.Events;
 
 public class GuardedTerritory : MonoBehaviour
 {
-    public static UnityAction triggerAlarm;
-    public static UnityAction stopAlarm;
+    public UnityAction TriggerAlarm;
+    public UnityAction StopAlarm;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            triggerAlarm?.Invoke();
+            TriggerAlarm?.Invoke();
         }
-
-        Debug.Log(collision.gameObject.name);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            stopAlarm?.Invoke();
+            StopAlarm?.Invoke();
         }
-
-        Debug.Log("left Collision");
     }
 }
