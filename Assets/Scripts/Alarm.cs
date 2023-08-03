@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
+[RequireComponent(typeof(GuardedTerritory))]
 
 public class Alarm : MonoBehaviour
 {
@@ -12,17 +13,17 @@ public class Alarm : MonoBehaviour
     private int _targetValue;
     private AudioSource _sound;
     private Coroutine _volumeRoutine;
-    private GuardedTerritory _guardedTerritory;
-
-    private void Awake()
-    {
-        _guardedTerritory = FindObjectOfType<GuardedTerritory>();
-    }
+    [SerializeField] private GuardedTerritory _guardedTerritory;
 
     private void OnEnable()
     {
         _guardedTerritory.AlarmTriggered += OnAlarmTrigger;
         _guardedTerritory.AlarmStopped += OnAlarmStop;
+    }
+    private void OnDisable()
+    {
+        _guardedTerritory.AlarmTriggered -= OnAlarmTrigger;
+        _guardedTerritory.AlarmStopped -= OnAlarmStop;
     }
 
     private void Start()
