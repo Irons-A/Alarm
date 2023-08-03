@@ -5,14 +5,14 @@ using UnityEngine.Events;
 
 public class GuardedTerritory : MonoBehaviour
 {
-    public UnityAction TriggerAlarm;
-    public UnityAction StopAlarm;
+    public UnityAction AlarmTriggered;
+    public UnityAction AlarmStopped;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            TriggerAlarm?.Invoke();
+            AlarmTriggered?.Invoke();
         }
     }
 
@@ -20,7 +20,7 @@ public class GuardedTerritory : MonoBehaviour
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            StopAlarm?.Invoke();
+            AlarmStopped?.Invoke();
         }
     }
 }

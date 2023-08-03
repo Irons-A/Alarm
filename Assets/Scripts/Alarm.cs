@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 
-public class AlarmController : MonoBehaviour
+public class Alarm : MonoBehaviour
 {
     private float _volumeAmplification = 0.5f;
     private int _minVolume = 0;
@@ -21,8 +21,8 @@ public class AlarmController : MonoBehaviour
 
     private void OnEnable()
     {
-        _guardedTerritory.TriggerAlarm += TriggerAlarm;
-        _guardedTerritory.StopAlarm += StopAlarm;
+        _guardedTerritory.AlarmTriggered += OnAlarmTrigger;
+        _guardedTerritory.AlarmStopped += OnAlarmStop;
     }
 
     private void Start()
@@ -39,11 +39,6 @@ public class AlarmController : MonoBehaviour
         {
             _sound.Play();
         }
-        
-        if (_volumeRoutine != null)
-        {
-            StopCoroutine(_volumeRoutine);
-        }
 
         while (_sound.volume != _targetValue)
         {
@@ -52,15 +47,25 @@ public class AlarmController : MonoBehaviour
         }
     }
 
-    public void TriggerAlarm()
+    private void StopOldCoroutine()
+    {
+        if (_volumeRoutine != null)
+        {
+            StopCoroutine(_volumeRoutine);
+        }
+    }
+
+    public void OnAlarmTrigger()
     {
         _targetValue = _maxVolume;
+        StopOldCoroutine();
         _volumeRoutine = StartCoroutine(ChangeVolume());
     }
 
-    public void StopAlarm()
+    public void OnAlarmStop()
     {
         _targetValue = _minVolume;
+        StopOldCoroutine();
         _volumeRoutine = StartCoroutine(ChangeVolume());
     }
 }
