@@ -7,53 +7,31 @@ using UnityEngine;
 
 public class Alarm : MonoBehaviour
 {
+    [SerializeField] private GuardedTerritory _guardedTerritory;
+
     private float _volumeAmplification = 0.5f;
     private int _minVolume = 0;
     private int _maxVolume = 1;
     private int _targetValue;
     private AudioSource _sound;
     private Coroutine _volumeRoutine;
-    [SerializeField] private GuardedTerritory _guardedTerritory;
 
-    private void OnEnable()
-    {
-        _guardedTerritory.AlarmTriggered += OnAlarmTrigger;
-        _guardedTerritory.AlarmStopped += OnAlarmStop;
-    }
-    private void OnDisable()
-    {
-        _guardedTerritory.AlarmTriggered -= OnAlarmTrigger;
-        _guardedTerritory.AlarmStopped -= OnAlarmStop;
-    }
-
-    private void Start()
+    private void Awake()
     {
         _sound = GetComponent<AudioSource>();
         _sound.volume = 0;
     }
 
-    private IEnumerator ChangeVolume()
+    private void OnEnable()
     {
-        var amplificationRate = new WaitForSeconds(0.1f);
-
-        if (!_sound.isPlaying)
-        {
-            _sound.Play();
-        }
-
-        while (_sound.volume != _targetValue)
-        {
-            _sound.volume = Mathf.MoveTowards(_sound.volume, _targetValue, _volumeAmplification * Time.deltaTime);
-            yield return amplificationRate;
-        }
+        _guardedTerritory.alarmTriggering += OnAlarmTrigger;
+        _guardedTerritory.alarmStopping += OnAlarmStop;
     }
 
-    private void StopOldCoroutine()
+    private void OnDisable()
     {
-        if (_volumeRoutine != null)
-        {
-            StopCoroutine(_volumeRoutine);
-        }
+        _guardedTerritory.alarmTriggering -= OnAlarmTrigger;
+        _guardedTerritory.alarmStopping -= OnAlarmStop;
     }
 
     public void OnAlarmTrigger()
@@ -68,5 +46,27 @@ public class Alarm : MonoBehaviour
         _targetValue = _minVolume;
         StopOldCoroutine();
         _volumeRoutine = StartCoroutine(ChangeVolume());
+    }
+
+    private IEnumerator ChangeVolume()
+    {
+        if (_sound.isPlaying != true)
+        {
+            _sound.Play();
+        }
+
+        while (_sound.volume != _targetValue)
+        {
+            _sound.volume = Mathf.MoveTowards(_sound.volume, _targetValue, _volumeAmplification * Time.deltaTime);
+            yield return null;
+        }
+    }
+
+    private void StopOldCoroutine()
+    {
+        if (_volumeRoutine != null)
+        {
+            StopCoroutine(_volumeRoutine);
+        }
     }
 }

@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Robber : MonoBehaviour
 {
+    private const KeyCode RightInput = KeyCode.D;
+    private const KeyCode LeftInput = KeyCode.A;
+
     private float _speed = 6;
 
     private void Update()
@@ -13,12 +14,11 @@ public class Robber : MonoBehaviour
 
     private void Move()
     {
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(RightInput))
         {
             transform.Translate(_speed * Time.deltaTime, 0, 0);
         }
-
-        if (Input.GetKey(KeyCode.A))
+        else if (Input.GetKey(LeftInput))
         {
             transform.Translate(-1 * _speed * Time.deltaTime, 0, 0);
         }

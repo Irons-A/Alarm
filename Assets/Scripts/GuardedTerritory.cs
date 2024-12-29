@@ -1,18 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class GuardedTerritory : MonoBehaviour
 {
-    public UnityAction AlarmTriggered;
-    public UnityAction AlarmStopped;
+    public event Action alarmTriggering;
+    public event Action alarmStopping;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            AlarmTriggered?.Invoke();
+            alarmTriggering?.Invoke();
         }
     }
 
@@ -20,7 +18,7 @@ public class GuardedTerritory : MonoBehaviour
     {
         if (collision.TryGetComponent<Robber>(out Robber component))
         {
-            AlarmStopped?.Invoke();
+            alarmStopping?.Invoke();
         }
     }
 }
